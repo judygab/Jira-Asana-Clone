@@ -14,3 +14,12 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.navbar {
+  box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);
+}
+
+.btn-primary {
+  background-color: #746BC4 !important;
+  border-color: #746BC4 !important;
+}
