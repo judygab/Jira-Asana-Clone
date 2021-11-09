@@ -1,5 +1,8 @@
 import React from 'react';
-import { Col } from 'react-bootstrap';
+import { Col, Button, Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+
 
 interface BoardSectionProps {
   title: String
@@ -12,6 +15,15 @@ const BoardSection: React.FC<BoardSectionProps> = ({ title }) => {
         <h3 className="me-auto">{title}</h3>
         <div>add</div>
       </div>
+      <Card>
+        <Card.Body>
+          this is some ticket
+        </Card.Body>
+      </Card>
+      <Button className="add-wrapper">
+        <FontAwesomeIcon icon={faPlus} style={{'padding': '2px'}}/>
+        Add task
+      </Button>
     </Col>
   );
 }
