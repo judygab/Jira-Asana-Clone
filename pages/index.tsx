@@ -7,7 +7,7 @@ import Layout from '../components/layout';
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div className="d-flex flex-column h-full">
     </div>
   )
 }

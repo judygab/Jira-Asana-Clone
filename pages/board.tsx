@@ -6,7 +6,7 @@ const Board = () => {
   const sections: Array<String> = ['Backlog', 'In-Progress', 'Review', 'Done'];
 
   return (
-    <div className="pt-3">
+    <div className="pt-3 h-100">
       <Row>
         <h1>Project Title</h1>
       </Row>

@@ -7,6 +7,12 @@ body {
   height: 100%;
 }
 
+#__next {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -27,4 +33,28 @@ a {
 
 .card {
   margin-bottom: 8px;
+}
+
+.add-wrapper.btn.btn-primary {
+  background-color: inherit !important;
+  border-color: inherit !important;
+  color: #6f7782 !important;
+  border: none;
+}
+
+.add-wrapper.btn.btn-primary:hover {
+  background-color: rgba(21, 7, 38, 0.04) !important;
+  border-color: rgba(21, 7, 38, 0.04) !important;
+  color: #6f7782 !important;
+  border: none;
+}
+
+.is-empty {
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(232, 236, 238, 0.5), rgba(232, 236, 238, 0) 100%);
+  flex: 1 1 100%;
+}
+
+.main-content {
+  flex: 1 1 100%;
 }

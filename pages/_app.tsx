@@ -7,7 +7,7 @@ import { Container } from 'react-bootstrap';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Layout>
-      <Container>
+      <Container className="main-content">
         <Component {...pageProps} />
       </Container>
     </Layout>

@@ -13,9 +13,9 @@ const BoardSection: React.FC<BoardSectionProps> = ({ title }) => {
     <Col md={3} className="d-flex flex-column p-2">
       <div className="board-section-header d-flex flex-row align-items-center">
         <h3 className="me-auto">{title}</h3>
-        <div>add</div>
+        <FontAwesomeIcon icon={faPlus} style={{'color': '#6f7782'}}/>
       </div>
-      <Card>
+      {/*<Card>
         <Card.Body>
           this is some ticket
         </Card.Body>
@@ -23,7 +23,13 @@ const BoardSection: React.FC<BoardSectionProps> = ({ title }) => {
       <Button className="add-wrapper">
         <FontAwesomeIcon icon={faPlus} style={{'padding': '2px'}}/>
         Add task
-      </Button>
+      </Button>*/}
+      <div className="is-empty d-flex flex-column">
+        <Button className="add-wrapper">
+          <FontAwesomeIcon icon={faPlus} style={{'padding': '2px'}}/>
+          Add task
+        </Button>
+      </div>
     </Col>
   );
 }
