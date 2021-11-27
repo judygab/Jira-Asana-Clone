@@ -7,9 +7,7 @@ export const Task = objectType({
     t.string('id')
     t.string('createdAt')
     t.string('title')
-    t.string('url')
     t.string('description')
-    t.string('category')
     t.list.field('users', {
       type: User,
       async resolve(parent, _args, ctx) {
@@ -20,6 +18,18 @@ export const Task = objectType({
             },
           })
           .users()
+      },
+    })
+  },
+})
+
+export const TasksQuery = extendType({
+  type: 'Query',
+  definition(t) {
+    t.nonNull.list.field('tasks', {
+      type: 'Task',
+      resolve(_parent, _args, ctx) {
+        return ctx.prisma.task.findMany()
       },
     })
   },
