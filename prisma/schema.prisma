@@ -18,6 +18,7 @@ model User {
   image     String?
   role      Role     @default(FREE)
   tasks     Task[]
+  name      String
 }
 
 enum Role {

@@ -5,3 +5,27 @@
 type Query {
   ok: Boolean!
 }
+
+enum Role {
+  FREE
+  SUBSCRIBED
+}
+
+type Task {
+  category: String
+  createdAt: String
+  description: String
+  id: String
+  title: String
+  url: String
+  users: [User]
+}
+
+type User {
+  email: String
+  id: String
+  image: String
+  name: String
+  role: Role
+  tasks: [Task]
+}
