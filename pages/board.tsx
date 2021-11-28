@@ -15,7 +15,6 @@ const AllTasksQuery = gql`
 
 const Board = () => {
   const { data, loading, error } = useQuery(AllTasksQuery)
-  console.log(data);
   const sections: Array<String> = ['Backlog', 'In-Progress', 'Review', 'Done'];
 
   if (loading) return <p>Loading...</p>
