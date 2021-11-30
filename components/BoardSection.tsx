@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { Modal } from 'react-bootstrap';
 import { gql, useMutation } from '@apollo/client';
+import TaskComponent from './TaskComponent';
 
 const CreateTaskMutation = gql`
   mutation CreateTask($id: String, $title: String!, $description: String!) {
@@ -17,9 +18,10 @@ const CreateTaskMutation = gql`
 
 interface BoardSectionProps {
   title: String
+  tasks: any
 }
 
-const BoardSection: React.FC<BoardSectionProps> = ({ title }) => {
+const BoardSection: React.FC<BoardSectionProps> = ({ title, tasks }) => {
   const [showModal, setShowModal] = useState(false);
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
@@ -41,11 +43,17 @@ const BoardSection: React.FC<BoardSectionProps> = ({ title }) => {
           <h3 className="me-auto">{title}</h3>
           <FontAwesomeIcon icon={faPlus} style={{'color': '#6f7782'}}/>
         </div>
-        <Card className="ticket-container">
-          <Card.Body>
-            this is some ticket
-          </Card.Body>
-        </Card>
+        {tasks &&
+          tasks.tasks.map((task: Task) => {
+            return (
+              <TaskComponent
+               title={task.title}
+               description={task.description}
+               id={task.id}
+               />
+            )
+          })
+        }
         <Button className="add-wrapper">
           <FontAwesomeIcon icon={faPlus} style={{'padding': '2px'}}/>
           Add task

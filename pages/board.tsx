@@ -31,6 +31,7 @@ const Board = () => {
             <BoardSection
               title={section}
               key={index}
+              tasks={data}
               ></BoardSection>
           )
         })}
