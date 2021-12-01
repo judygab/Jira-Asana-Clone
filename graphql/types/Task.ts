@@ -8,6 +8,7 @@ export const Task = objectType({
     t.string('createdAt')
     t.string('title')
     t.string('description')
+    t.string('status')
     t.list.field('users', {
       type: User,
       async resolve(parent, _args, ctx) {
@@ -46,6 +47,7 @@ export const TaskMutation = extendType({
        description: nonNull(stringArg()),
        userId: stringArg(),
        id: stringArg(),
+       status: stringArg(),
      },
      resolve(_root, args, ctx) {
        return ctx.prisma.task.create({
@@ -54,6 +56,7 @@ export const TaskMutation = extendType({
            description: args.description,
            userId: args.userId,
            id: args.id,
+           status: args.status,
          }
        })
      },
@@ -66,6 +69,7 @@ export const TaskMutation = extendType({
         title: stringArg(),
         description: stringArg(),
         userId: stringArg(),
+        status: stringArg(),
       },
       resolve(_root, args, ctx) {
         return ctx.prisma.task.update({
@@ -73,7 +77,8 @@ export const TaskMutation = extendType({
           data: {
             title: args.title,
             description: args.description,
-            userId: args.userId
+            userId: args.userId,
+            status: args.status,
           },
         });
       },

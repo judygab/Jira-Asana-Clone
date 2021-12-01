@@ -34,4 +34,5 @@ model Task {
   description String
   User        User?    @relation(fields: [userId], references: [id])
   userId      String?
+  status      String?
 }

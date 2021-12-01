@@ -9,6 +9,7 @@ const AllTasksQuery = gql`
       id
       title
       description
+      status
     }
   }
 `
@@ -27,11 +28,13 @@ const Board = () => {
       </Row>
       <div className="board-container d-flex flex-row flex-grow-1">
         {sections.map((section, index) => {
+          console.log(data.tasks);
+          let filteredData: Array<Task> = data ? data.tasks.filter((task: Task) => {return task.status === section}) : [];
           return (
             <BoardSection
               title={section}
               key={index}
-              tasks={data}
+              tasks={filteredData}
               ></BoardSection>
           )
         })}

@@ -3,9 +3,9 @@
 
 
 type Mutation {
-  createTask(description: String!, id: String, title: String!, userId: String): Task!
+  createTask(description: String!, id: String, status: String, title: String!, userId: String): Task!
   deleteTask(id: String!): Task
-  updateTask(description: String, id: String!, title: String, userId: String): Task
+  updateTask(description: String, id: String!, status: String, title: String, userId: String): Task
 }
 
 type Query {
@@ -21,6 +21,7 @@ type Task {
   createdAt: String
   description: String
   id: String
+  status: String
   title: String
   users: [User]
 }

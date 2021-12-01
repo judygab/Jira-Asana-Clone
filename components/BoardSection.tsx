@@ -44,26 +44,30 @@ const BoardSection: React.FC<BoardSectionProps> = ({ title, tasks }) => {
           <FontAwesomeIcon icon={faPlus} style={{'color': '#6f7782'}}/>
         </div>
         {tasks &&
-          tasks.tasks.map((task: Task) => {
+          tasks.map((task: Task) => {
             return (
               <TaskComponent
                title={task.title}
                description={task.description}
                id={task.id}
+               key={task.id}
                />
             )
-          })
+          })}
+          {tasks.length > 0 &&
+            <Button className="add-wrapper" onClick={handleShow}>
+              <FontAwesomeIcon icon={faPlus} style={{'padding': '2px'}}/>
+              Add task
+            </Button>
+          }
+        { tasks.length === 0 &&
+          <div className="is-empty d-flex flex-column">
+            <Button className="add-wrapper" onClick={handleShow}>
+              <FontAwesomeIcon icon={faPlus} style={{'padding': '2px'}}/>
+              Add task
+            </Button>
+          </div>
         }
-        <Button className="add-wrapper">
-          <FontAwesomeIcon icon={faPlus} style={{'padding': '2px'}}/>
-          Add task
-        </Button>
-        <div className="is-empty d-flex flex-column">
-          <Button className="add-wrapper" onClick={handleShow}>
-            <FontAwesomeIcon icon={faPlus} style={{'padding': '2px'}}/>
-            Add task
-          </Button>
-        </div>
       </Col>
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
