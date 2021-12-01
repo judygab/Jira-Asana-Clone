@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { gql, useMutation } from '@apollo/client';
+import { Draggable } from 'react-beautiful-dnd';
 
 const UpdateTaskMutation = gql`
-  mutation UpdateTaskMutation($id: String!, $title: String, $description: String, $userId: String) {
-    updateTask(description: $description, id: $id, title: $title, userId: $userId) {
+  mutation UpdateTaskMutation($id: String!, $title: String, $description: String, $userId: String, $status: String) {
+    updateTask(description: $description, id: $id, title: $title, userId: $userId, status: $status) {
       id
       title
       description
+      status
     }
   }
 `
 
-const TaskComponent: React.FC<Task> = ({ title, description, id }) => {
+const TaskComponent: React.FC<Task> = ({ title, description, id, index }) => {
   const [showModal, setShowModal] = useState(false);
   const [taskTitle, setTaskTitle] = useState(title);
   const [taskDescription, setTaskDescription] = useState(description);
@@ -30,9 +32,13 @@ const TaskComponent: React.FC<Task> = ({ title, description, id }) => {
 
   return (
     <>
-      <Card className="task-container" onClick={() => handleShow()}>
-        <Card.Body>{title}</Card.Body>
-      </Card>
+      <Draggable draggableId={id} index={index}>
+        {(provided) => (
+          <Card className="task-container" onClick={() => handleShow()} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+            <Card.Body>{title}</Card.Body>
+          </Card>
+        )}
+      </Draggable>
         <Modal show={showModal} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>Update a Task</Modal.Title>
