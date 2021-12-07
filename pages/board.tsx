@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row } from 'react-bootstrap';
 import BoardSection from '../components/BoardSection';
 import { gql, useQuery, useMutation } from '@apollo/client';
@@ -27,8 +27,13 @@ const UpdateTaskMutation = gql`
 `
 
 const Board = () => {
-  const { data, loading, error } = useQuery(AllTasksQuery);
+  const { data, loading, error } = useQuery(AllTasksQuery, {
+    onCompleted: data => {
+      setTasks(data.tasks)
+    }
+  });
   const [updateTask] = useMutation(UpdateTaskMutation);
+  const [tasks, setTasks] = useState([]);
   const sections: Array<String> = ['Backlog', 'In-Progress', 'Review', 'Done'];
 
   if (loading) return <p>Loading...</p>
@@ -45,13 +50,48 @@ const Board = () => {
       return;
     }
 
+    const updatedTasksList = tasks && tasks.map((t: any) => {
+      if (t.id === draggableId) {
+        return {
+          ...t,
+          status: destination.droppableId
+        }
+      } else {
+        return t;
+      }
+    })
+    setTasks(updatedTasksList);
+
     updateTask({
       variables: {
         id: draggableId,
         status: destination.droppableId,
-      }
-    })
-    console.log(data);
+      },
+    update: (cache, { data }) => {
+      const existingTasks : any = cache.readQuery({
+        query: AllTasksQuery
+      });
+      const updatedTasks = existingTasks!.tasks.map((t: any) => {
+        if (t.id === draggableId) {
+          return {
+            ...t,
+            ...data!.updateTask! };
+          } else {
+            return t;
+          }
+        }
+      );
+      cache.writeQuery({
+        query: AllTasksQuery,
+        data: {tasks: updatedTasks}
+      });
+      const dataInCache = cache.readQuery({ query: AllTasksQuery});
+      console.log(dataInCache);
+    },
+    onCompleted: data => {
+      // setTasks(data.tasks)
+    }
+  })
   }
 
   return (
@@ -62,7 +102,7 @@ const Board = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="board-container d-flex flex-row flex-grow-1">
           {sections.map((section, index) => {
-            let filteredData: Array<Task> = data ? data.tasks.filter((task: Task) => {return task.status === section}) : [];
+            let filteredData: Array<Task> = tasks ? tasks.filter((task: Task) => {return task.status === section}) : [];
             return (
               <BoardSection
                 title={section}
