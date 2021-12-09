@@ -29,6 +29,7 @@ const UpdateTaskMutation = gql`
 const Board = () => {
   const { data, loading, error } = useQuery(AllTasksQuery, {
     onCompleted: data => {
+      console.log(data.tasks)
       setTasks(data.tasks)
     }
   });

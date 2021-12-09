@@ -6,16 +6,7 @@ import { Modal } from 'react-bootstrap';
 import { gql, useMutation } from '@apollo/client';
 import TaskComponent from './TaskComponent';
 import { Droppable } from 'react-beautiful-dnd';
-
-const CreateTaskMutation = gql`
-  mutation CreateTask($id: String, $title: String!, $description: String!) {
-    createTask(id: $id, title: $title, description: $description) {
-      id
-      title
-      description
-    }
-  }
-`
+import AddTaskModal from './AddTaskModal';
 
 interface BoardSectionProps {
   title: string
@@ -24,25 +15,16 @@ interface BoardSectionProps {
 
 const BoardSection: React.FC<BoardSectionProps> = ({ title, tasks }) => {
   const [showModal, setShowModal] = useState(false);
-  const [taskTitle, setTaskTitle] = useState('');
-  const [taskDescription, setTaskDescription] = useState('');
-
-  const [createTask, { data, loading, error }] = useMutation(CreateTaskMutation);
 
   const handleClose = () => setShowModal(false)
   const handleShow = () => setShowModal(true)
-  const handleTaskCreate = (e) => {
-    e.preventDefault();
-    createTask({ variables: { title: taskTitle, description: taskDescription  } });
-    handleClose();
-  }
 
   return (
     <>
       <Col md={3} className="d-flex flex-column p-2">
         <div className="board-section-header d-flex flex-row align-items-center">
           <h3 className="me-auto">{title}</h3>
-          <FontAwesomeIcon icon={faPlus} style={{'color': '#6f7782'}}/>
+          <FontAwesomeIcon icon={faPlus} style={{'color': '#6f7782'}} onClick={handleShow}/>
         </div>
         <Droppable droppableId={title}>
           {(provided) => (
@@ -81,31 +63,11 @@ const BoardSection: React.FC<BoardSectionProps> = ({ title, tasks }) => {
             </Container>)}
         </Droppable>
       </Col>
-      <Modal show={showModal} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create a Task</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleTaskCreate}>
-            <Form.Group className="mb-3">
-              <Form.Label>Title</Form.Label>
-              <Form.Control type="text" value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)}></Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" style={{ height: '100px'}} value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)}></Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Assign To</Form.Label>
-              <Form.Select aria-label="Assign To">
-              </Form.Select>
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Submit
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      <AddTaskModal
+        showModal={showModal}
+        handleClose={handleClose}
+        boardCategory={title}
+        />
     </>
   );
 }
