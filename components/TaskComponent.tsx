@@ -1,8 +1,30 @@
 import React, { useState } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
-import { gql, useMutation } from '@apollo/client';
+import { gql, useQuery, useMutation } from '@apollo/client';
 import { Draggable } from 'react-beautiful-dnd';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+const AllTasksQuery = gql`
+  query {
+    tasks {
+      id
+      title
+      description
+      status
+    }
+  }
+`
+
+const AllUsersQuery = gql`
+  query {
+    users {
+      id
+      name
+    }
+  }
+`
 
 const UpdateTaskMutation = gql`
   mutation UpdateTaskMutation($id: String!, $title: String, $description: String, $userId: String, $status: String) {
@@ -15,11 +37,21 @@ const UpdateTaskMutation = gql`
   }
 `
 
+const DeleteTaskMutation = gql`
+  mutation DeleteTaskMutation($id: String!) {
+    deleteTask(id: $id) {
+      id
+    }
+  }
+`
+
 const TaskComponent: React.FC<Task> = ({ title, description, id, index }) => {
   const [showModal, setShowModal] = useState(false);
   const [taskTitle, setTaskTitle] = useState(title);
   const [taskDescription, setTaskDescription] = useState(description);
   const [updateTask, { data, loading, error }] = useMutation(UpdateTaskMutation);
+  const [deleteTask] = useMutation(DeleteTaskMutation);
+  const { data: usersData, loading: usersLoading} = useQuery(AllUsersQuery);
 
   const handleClose = () => setShowModal(false)
   const handleShow = () => setShowModal(true)
@@ -27,6 +59,29 @@ const TaskComponent: React.FC<Task> = ({ title, description, id, index }) => {
   const handleTaskUpdate = (e) => {
     e.preventDefault();
     updateTask({ variables: { title: taskTitle, description: taskDescription, id: id}});
+    handleClose();
+  }
+
+  const handleTaskDelete = () => {
+    deleteTask({ variables: { id: id },
+      update: (cache) => {
+        // const data : any = cache.readQuery({ query: AllTasksQuery });
+        // const updatedTasks = data.tasks.filter(({id: itemId}) => itemId !== id);
+        // cache.writeQuery({
+        //   query: AllTasksQuery,
+        //   data: {tasks: updatedTasks}
+        // });
+        cache.modify({
+          fields: {
+            tasks(existingTaskRefs, { readField }) {
+              return existingTaskRefs.filter(
+                taskRef => id !== readField('id', taskRef)
+              );
+            },
+          },
+        });
+      }
+    });
     handleClose();
   }
 
@@ -56,11 +111,22 @@ const TaskComponent: React.FC<Task> = ({ title, description, id, index }) => {
               <Form.Group className="mb-3">
                 <Form.Label>Assign To</Form.Label>
                 <Form.Select aria-label="Assign To">
+                  {
+                    usersData &&
+                    usersData.users.map(user => {
+                      return (
+                        <option value={user.id} key={user.id}>{user.name}</option>
+                      )
+                    })
+                  }
                 </Form.Select>
               </Form.Group>
-              <Button variant="primary" type="submit">
-                Update
-              </Button>
+              <div className="d-flex justify-content-between">
+                <Button variant="primary" type="submit">
+                  Update
+                </Button>
+                <FontAwesomeIcon icon={faTrashAlt} style={{'padding': '2px'}} size="lg" onClick={handleTaskDelete}/>
+              </div>
             </Form>
           </Modal.Body>
         </Modal>

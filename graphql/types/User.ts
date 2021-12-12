@@ -1,4 +1,4 @@
-import { enumType, objectType } from 'nexus'
+import { enumType, objectType, nonNull, extendType } from 'nexus'
 import { Task } from './Task'
 
 export const User = objectType({
@@ -19,6 +19,18 @@ export const User = objectType({
             },
           })
           .tasks()
+      },
+    })
+  },
+})
+
+export const UsersQuery = extendType({
+  type: 'Query',
+  definition(t) {
+    t.nonNull.list.field('users', {
+      type: 'User',
+      resolve(_parent, _args, ctx) {
+        return ctx.prisma.user.findMany()
       },
     })
   },

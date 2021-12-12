@@ -10,6 +10,7 @@ type Mutation {
 
 type Query {
   tasks: [Task]!
+  users: [User]!
 }
 
 enum Role {
