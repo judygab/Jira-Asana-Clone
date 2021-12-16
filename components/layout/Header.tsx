@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navbar, Container, Button } from 'react-bootstrap';
+import Link from 'next/link'
 
 const Header = () => {
   return (
@@ -11,7 +12,9 @@ const Header = () => {
           <Navbar.Text className="p-3">
             Signed in as: <a href="#login">John Doe</a>
           </Navbar.Text>
-          <Button>Log out</Button>
+          <Link href="/login>" passHref>
+            <Button>Log out</Button>
+          </Link>
         </Navbar.Collapse>
       </Container>
   </Navbar>

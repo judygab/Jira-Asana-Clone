@@ -2,13 +2,12 @@ import { NextApiHandler } from "next";
 import NextAuth from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import prisma from "../../lib/prisma";
+// import prisma from "../../../lib/prisma";
 
 import { PrismaClient } from "@prisma/client";
 
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-// we will define `options` up next
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
 export default authHandler;
 
@@ -28,4 +27,5 @@ const options = {
   ],
   // @ts-ignore
   adapter: PrismaAdapter(prisma),
+  secret: process.env.SECRET,
 };
