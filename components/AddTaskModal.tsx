@@ -46,7 +46,13 @@ const AddTaskModal = ({
   const [taskDescription, setTaskDescription] = useState('');
   const [assignTo, setAssignTo] = useState('');
 
-  const [createTask, { data, loading, error }] = useMutation(CreateTaskMutation);
+  const [createTask, { data, loading, error }] = useMutation(CreateTaskMutation, {
+    onCompleted: (data) => {
+      setTaskTitle('');
+      setTaskDescription('');
+      setAssignTo('');
+    }
+  });
   const { data: usersData, loading: usersLoading} = useQuery(AllUsersQuery);
 
   const handleTaskCreate = (e) => {
@@ -91,7 +97,7 @@ const AddTaskModal = ({
             <Form.Select aria-label="Assign To" value={assignTo} onChange={(e) => setAssignTo(e.target.value)}>
               {
                 usersData &&
-                usersData.users.map(user => {
+                usersData.users.map((user: User) => {
                   return (
                     <option value={user.id} key={user.id}>{user.name}</option>
                   )

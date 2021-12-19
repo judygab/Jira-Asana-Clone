@@ -113,7 +113,7 @@ const TaskComponent: React.FC<Task> = ({ title, description, id, index }) => {
                 <Form.Select aria-label="Assign To">
                   {
                     usersData &&
-                    usersData.users.map(user => {
+                    usersData.users.map((user: User) => {
                       return (
                         <option value={user.id} key={user.id}>{user.name}</option>
                       )
