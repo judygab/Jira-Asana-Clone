@@ -27,10 +27,25 @@ export const Task = objectType({
 export const TasksQuery = extendType({
   type: 'Query',
   definition(t) {
+    // get all tasks
     t.nonNull.list.field('tasks', {
       type: 'Task',
       resolve(_parent, _args, ctx) {
         return ctx.prisma.task.findMany()
+      },
+    });
+    // get task by user id
+    t.field('task', {
+      type: 'Task',
+      args: {
+        userId: nonNull(stringArg())
+      },
+      resolve(_parent, args, ctx) {
+        return ctx.prisma.task.findMany({
+          where: {
+              userId: args.userId
+          }
+        })
       },
     })
   },

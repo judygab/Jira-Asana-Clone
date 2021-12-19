@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Row } from 'react-bootstrap';
 import BoardSection from '../components/BoardSection';
-import { gql, useQuery, useMutation } from '@apollo/client';
+import { gql, useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import { DragDropContext } from 'react-beautiful-dnd';
+import { useSession } from "next-auth/react";
 
 const AllTasksQuery = gql`
   query {
@@ -11,6 +12,21 @@ const AllTasksQuery = gql`
       title
       description
       status
+    }
+  }
+`
+
+const GetUserQuery = gql`
+  query($email: String!) {
+    user(email: $email) {
+      id
+      name
+      tasks {
+        id
+        title
+        description
+        status
+      }
     }
   }
 `
@@ -34,11 +50,23 @@ const Board = () => {
     }
   });
   const [updateTask] = useMutation(UpdateTaskMutation);
+  const { data: session, status } = useSession()
+  const [getTasks, { data: tasksData, loading: tasksLoading, error: tasksError }] = useLazyQuery(GetUserQuery);
   const [tasks, setTasks] = useState([]);
   const sections: Array<String> = ['Backlog', 'In-Progress', 'Review', 'Done'];
 
+  useEffect(() => {
+    console.log(session);
+    if (session) {
+      getTasks({ variables: { email: session.user.email }});
+    }
+  }, [session])
+
   if (loading) return <p>Loading...</p>
   if (error) return <p>Oh no... {error.message}</p>
+
+  // if (tasksLoading) return <p>Loading...</p>
+  // if (tasksError) return <p>Oh no... {tasksError.message}</p>
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
@@ -103,7 +131,7 @@ const Board = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="board-container d-flex flex-row flex-grow-1">
           {sections.map((section, index) => {
-            let filteredData: Array<Task> = tasks ? tasks.filter((task: Task) => {return task.status === section}) : [];
+            let filteredData: Array<Task> = tasksData ? tasksData.user.tasks.filter((task: Task) => {return task.status === section}) : [];
             return (
               <BoardSection
                 title={section}

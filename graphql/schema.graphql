@@ -9,7 +9,9 @@ type Mutation {
 }
 
 type Query {
+  task(userId: String!): Task
   tasks: [Task]!
+  user(email: String!): User
   users: [User]!
 }
 
