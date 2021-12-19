@@ -56,7 +56,6 @@ const Board = () => {
   const sections: Array<String> = ['Backlog', 'In-Progress', 'Review', 'Done'];
 
   useEffect(() => {
-    console.log(session);
     if (session) {
       getTasks({ variables: { email: session.user.email }});
     }
@@ -123,6 +122,12 @@ const Board = () => {
   })
   }
 
+  const reFetchTasks = () => {
+    if (session) {
+      getTasks({ variables: { email: session.user.email }});
+    }
+  }
+
   return (
     <div className="pt-3 h-100 d-flex flex-column">
       <Row>
@@ -137,6 +142,7 @@ const Board = () => {
                 title={section}
                 key={index}
                 tasks={filteredData}
+                reFetchTasks={reFetchTasks}
                 ></BoardSection>
             )
           })}

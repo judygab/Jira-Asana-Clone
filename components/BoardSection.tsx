@@ -9,14 +9,18 @@ import { Droppable } from 'react-beautiful-dnd';
 import AddTaskModal from './AddTaskModal';
 
 interface BoardSectionProps {
-  title: string
+  title: String
   tasks: any
+  reFetchTasks: () => void
 }
 
-const BoardSection: React.FC<BoardSectionProps> = ({ title, tasks }) => {
+const BoardSection: React.FC<BoardSectionProps> = ({ title, tasks, reFetchTasks }) => {
   const [showModal, setShowModal] = useState(false);
 
-  const handleClose = () => setShowModal(false)
+  const handleClose = () => {
+    setShowModal(false)
+    reFetchTasks()
+  }
   const handleShow = () => setShowModal(true)
 
   return (

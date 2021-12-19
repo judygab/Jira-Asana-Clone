@@ -29,7 +29,6 @@ const CreateTaskMutation = gql`
       title
       description
       status
-      userId
     }
   }
 `
@@ -45,14 +44,21 @@ const AddTaskModal = ({
   }) => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
-  const [assignTo, setAssignTo] = useState({id: '', name: ''});
+  const [assignTo, setAssignTo] = useState('');
 
   const [createTask, { data, loading, error }] = useMutation(CreateTaskMutation);
   const { data: usersData, loading: usersLoading} = useQuery(AllUsersQuery);
 
   const handleTaskCreate = (e) => {
     e.preventDefault();
-    createTask({ variables: { title: taskTitle, description: taskDescription, status: boardCategory, userId: assignTo  },
+    let userId = '';
+    if (assignTo) {
+      userId = assignTo;
+    } else if (usersData) {
+      userId = usersData.users[0].id;
+    }
+
+    createTask({ variables: { title: taskTitle, description: taskDescription, status: boardCategory, userId: userId  },
       update: (cache, { data: { addItem } }) => {
         const data : any = cache.readQuery({ query: AllTasksQuery });
         const updatedTasks = [...data.tasks, createTask];
@@ -82,7 +88,7 @@ const AddTaskModal = ({
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Assign To</Form.Label>
-            <Form.Select aria-label="Assign To" onChange={(e) => setAssignTo({ id: user.id, name: user.name})}>
+            <Form.Select aria-label="Assign To" value={assignTo} onChange={(e) => setAssignTo(e.target.value)}>
               {
                 usersData &&
                 usersData.users.map(user => {
