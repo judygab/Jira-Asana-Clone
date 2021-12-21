@@ -1,4 +1,12 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Jira Asana Clone
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). And:
+ - Apollo Server as the GraphQL server
+ - Apollo Client as the GraphQL client
+ - Nexus for constructing the GraphQL schema
+ - Prisma as the ORM for migrations and database access
+ - TypeScript as the programming language
+ - React-bootstrap as a CSS framework
 
 ## Getting Started
 
