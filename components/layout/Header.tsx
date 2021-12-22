@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Container, Button } from 'react-bootstrap';
 import Link from 'next/link'
+import { useSession, signOut } from "next-auth/react";
 
 const Header = () => {
+  const [name, setName] = useState<string>('');
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      setName(session.user.name);
+    }
+  }, [session]);
+
   return (
     <Navbar>
       <Container>
@@ -10,10 +20,10 @@ const Header = () => {
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text className="p-3">
-            Signed in as: <a href="#login">John Doe</a>
+            Signed in as: <a href="#login">{name}</a>
           </Navbar.Text>
           <Link href="/login>" passHref>
-            <Button>Log out</Button>
+            <Button onClick={() => signOut()}>Log out</Button>
           </Link>
         </Navbar.Collapse>
       </Container>
