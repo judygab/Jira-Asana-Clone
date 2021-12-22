@@ -34,7 +34,7 @@ model Task {
   updatedAt   DateTime @updatedAt
   title       String
   description String
-  User        User?    @relation(fields: [userId], references: [id])
+  user        User?    @relation(fields: [userId], references: [id])
   userId      String?
   status      String?
 }
